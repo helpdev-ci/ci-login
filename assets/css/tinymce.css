@@ -1,0 +1,13 @@
+/* Site rules */
+body {
+   font-size: 12pt;
+}
+
+/* TinyMCE specific rules */
+body.mceContentBody {
+   /* background: #000; */
+}
+
+.mceContentBody a {
+   /* color: red !important; /* FF requires a important here */
+}
