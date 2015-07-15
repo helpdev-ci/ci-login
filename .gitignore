@@ -8,5 +8,5 @@ ci-login/cache/*
 !ci-login/cache/.htaccess
 
 ci-login/logs/*
-ci-login/logs/index.html
+!ci-login/logs/index.html
 !application/logs/.htaccess
