@@ -1,19 +1,23 @@
 # ci-login
 ### Create Table
 <pre>
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(11) NOT NULL,
-  `full_name` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
-  `login_username` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
-  `login_password` varchar(50) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+CREATE TABLE `login_sessions` (
+  `login_id` int(11) NOT NULL auto_increment,
+  `ip_address` varchar(45) NOT NULL default '0',
+  `last_access` datetime NOT NULL,
+  `uid` int(11) NOT NULL,
+  `udata` text NOT NULL,
+  PRIMARY KEY  (`login_id`)
+) ENGINE=InnoDB;
 </pre>
 <pre>
-CREATE TABLE IF NOT EXISTS `users_ss` (
-  `id` int(11) NOT NULL,
-  `ss_uid` int(11) NOT NULL,
-  `ss_address` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `ss_access_time` datetime NOT NULL,
-  `ss_key` varchar(50) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+CREATE TABLE `login` (
+  `uid` int(11) NOT NULL,
+  `first_name` varchar(150) NOT NULL,
+  `last_name` varchar(150) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `password` varchar(64) NOT NULL,
+  PRIMARY KEY  (`uid`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB;
 </pre>
