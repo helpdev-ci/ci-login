@@ -70,6 +70,20 @@
 	<h1>Welcome to CodeIgniter!</h1>
 
 	<div id="body">
+		<p>
+		<?php
+		if ($user_info) {
+			?>
+			Hello, <?php echo $user_info->first_name; ?> <?php echo $user_info->last_name; ?>. <a href="<?php echo base_url('auth/logout/'.$cm); ?>">Logout</a>
+			<?php
+		} else {
+			?>
+			<a href="<?php echo base_url('auth/login/'.$cm); ?>">Login</a>
+			<?php
+		}
+		?>
+		</p>
+
 		<p>The page you are looking at is being generated dynamically by CodeIgniter.</p>
 
 		<p>If you would like to edit this page you'll find it located at:</p>

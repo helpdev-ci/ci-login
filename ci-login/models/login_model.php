@@ -7,27 +7,59 @@ class login_model extends CI_Model {
         $this->load->database();
     }
 
+    function form_login($data = array()) {
+        $this->load->view('login_form', $data);
+    }
+
+     function form_signup($data = array()) {
+        $this->session->unset_userdata('sessionID');
+        $this->session->sess_destroy();
+        $this->load->view('signup_form', $data);
+     }
+
     function check_login() {
         $session_data = $this->session->userdata('sessionID');
         $login_id = $session_data['login_id'];
 
-        $this->db->select('*');
-        $this->db->from('login_sessions');
-        $this->db->where('login_id', $login_id);
-        $this->db->limit(1);
-        
-        $query = $this->db->get();
-
-        if ($query->num_rows() == 1)
-        {
-           $row = $query->row(); 
-
-           return $row;
-        } else {
+        if(!isset($login_id)) {
             return false;
         }
 
+        ### Get session
+            $this->db->select('*');
+            $this->db->from('login_sessions');
+            $this->db->where('login_id', $login_id);
+            $this->db->limit(1);
+            
+            $query = $this->db->get();
+
+            if ($query->num_rows() != 1)
+            {
+                return false;
+            }
+
+            $row = $query->row();
+
+        ### Get user info
+            $this->db->select('*');
+            $this->db->from('login');
+            $this->db->where('uid', $row->uid);
+            $this->db->limit(1);
+            
+            $query = $this->db->get();
+
+            if ($query->num_rows() != 1)
+            {
+                return false;
+            }
+
+            $row = $query->row();
+
+            return $row;
+
+        ### Happy ending
     }
+
     function login($username, $password) {
         
         $this->db->select('id,fullname, username, password');
@@ -44,6 +76,15 @@ class login_model extends CI_Model {
             return false; 
         }
     }
+
+    function logout($class = 'welcome') {
+
+         $this->session->unset_userdata('sessionID');
+         $this->session->sess_destroy();
+         redirect(base_url($class));
+
+     }
+
 }
   
 /* End of file modelog.php */
