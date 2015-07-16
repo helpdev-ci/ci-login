@@ -23,7 +23,7 @@ CREATE TABLE `login_sessions` (
 </pre>
 <pre>
 CREATE TABLE `login` (
-  `uid` int(11) NOT NULL,
+  `uid` int(11) NOT NULL auto_increment,
   `first_name` varchar(150) NOT NULL,
   `last_name` varchar(150) NOT NULL,
   `email` varchar(150) NOT NULL,
