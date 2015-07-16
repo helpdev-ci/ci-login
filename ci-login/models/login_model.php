@@ -22,7 +22,9 @@ class login_model extends CI_Model {
         $login_id = $session_data['login_id'];
 
         if(!isset($login_id)) {
-            return false;
+            //return false;
+            return -1;
+            //exit("Unknow session '" .$login_id."'");
         }
 
         ### Get session
@@ -35,7 +37,8 @@ class login_model extends CI_Model {
 
             if ($query->num_rows() != 1)
             {
-                return false;
+                //return false;
+                return -2;
             }
 
             $row = $query->row();
@@ -50,7 +53,8 @@ class login_model extends CI_Model {
 
             if ($query->num_rows() != 1)
             {
-                return false;
+                //return false;
+                return -3;
             }
 
             $row = $query->row();

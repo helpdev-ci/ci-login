@@ -51,7 +51,17 @@ class Auth extends CI_Controller {
     function login($cm = 'auth') {
          $sess_array = array('login_id' => 1);
          $this->session->set_userdata('sessionID', $sess_array);
-         redirect(base_url($cm), 'refresh');         
+
+         $session_data = $this->session->userdata('sessionID');
+         $login_id = $session_data['login_id'];
+
+         $user_info = $this->login_model->check_login();
+
+         if (!$user_info) {
+          redirect(base_url($cm), 'refresh'); 
+        } else {
+          redirect(base_url('auth'), 'refresh'); 
+        }
      }
 
      function logout($cm = 'auth') {
