@@ -58,9 +58,9 @@ class Auth extends CI_Controller {
          $user_info = $this->login_model->check_login();
 
          if (!$user_info) {
-          redirect(base_url($cm), 'refresh'); 
+            redirect(base_url('auth'), 'refresh');
         } else {
-          redirect(base_url('auth'), 'refresh'); 
+            redirect(base_url($cm), 'refresh');
         }
      }
 

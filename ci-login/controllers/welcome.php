@@ -30,13 +30,14 @@ class Welcome extends CI_Controller {
 			'user_info' => $user_info,
 			'cm' => $this->cm
 		);
-		print_r($user_info);
-		/*if (!$user_info) {
+		
+		if (!$user_info) {
 			//$data = $data;
 			$this->login_model->form_login($data);
 		} else {
 			$this->load->view('welcome_message', $data);
-		}*/
+			//print_r($user_info);
+		}
 		
 	}
 }

@@ -23,7 +23,7 @@ class login_model extends CI_Model {
 
         if(!isset($login_id)) {
             //return false;
-            return -1;
+            return false;
             //exit("Unknow session '" .$login_id."'");
         }
 
