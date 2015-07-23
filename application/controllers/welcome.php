@@ -24,13 +24,31 @@ class Welcome extends CI_Controller {
     }
 	public function index()
 	{
-		$data['session_info'] = $this->auth_model->check_login(1);
+		$auth_info = $this->auth_model->check_login();
+		if ($auth_info['code'] == 200) {
+			$user_info = $auth_info['value'];
+		} else {
+			$user_info = false;
+		}
+		$data['user_info'] = $user_info;
+		
 		$data['title'] = 'Session Info';
 		$this->load->view('templates/header', $data);
         $this->load->view('auth/index', $data);
         $this->load->view('templates/footer');
 		//$this->load->view('welcome_message');
 	}
+	
+	function logout() {
+		$this->auth_model->logout('welcome');
+    }
+	
+	function login() {
+		$auth_login = $this->auth_model->login('root', 'demo');
+		if ($auth_login['code'] == 200) {
+			redirect('welcome', 'refresh');
+		}
+    }
 }
 
 /* End of file welcome.php */
