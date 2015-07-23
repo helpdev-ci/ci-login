@@ -1,12 +1,9 @@
 .DS_Store
 
-application/*
-system/*
-user_guide/*
-ci-login/cache/*
-!ci-login/cache/index.html
-!ci-login/cache/.htaccess
+application/cache/*
+!application/cache/index.html
+!application/cache/.htaccess
 
-ci-login/logs/*
-!ci-login/logs/index.html
+application/logs/*
+!application/logs/index.html
 !application/logs/.htaccess
