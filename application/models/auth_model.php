@@ -5,19 +5,28 @@ class Auth_model extends CI_Model {
     {
         
     }
+    
+    function login_form($data)
+	{
+        $this->load->helper('form');
+		$this->load->view('common/header', $data);
+        $this->load->view('auth/form', $data);
+        $this->load->view('common/footer');
+		//$this->load->view('welcome_message');
+	}
         
-    public function check_login()
+    public function check_login($auth_id = FALSE)
     {
         $this->load->database('authDB');
-        
-        $session_auth = $this->session->userdata('authSession');
-        $auth_id = $session_auth['auth_id'];
-        if (!isset($auth_id) || $auth_id == "")
+        if ($auth_id === FALSE)
         {
             $data_return = array(
-                'code' => 401,
-                'msg' => 'Unauthorized',
-                'value' => 'session not found'
+                'code' => 400,
+                'msg' => 'Bad request',
+                'value' => array(
+                    'session_id' => $auth_id,
+                    'error_msg' => ''
+                )
             );
             
             return $data_return;
@@ -39,16 +48,18 @@ class Auth_model extends CI_Model {
         INNER JOIN auth_users ON auth_sessions.user_id = auth_users.uid
         WHERE
         auth_sessions.auth_id = " . $auth_id ."
-        AND auth_users.flag in(0, 1)
-        GROUP BY auth_sessions.auth_id";
+        AND auth_users.flag in(0, 1)";
         
         $query = $this->db->query($sql);
         
         if (!$query) {
             $data_return = array(
-                'code' => 401,
-                'msg' => 'Unauthorized',
-                'value' => $this->db->_error_message()
+                'code' => 500,
+                'msg' => 'Internal server error',
+                'value' => array(
+                    'session_id' => $auth_id,
+                    'error_msg' => $this->db->_error_message()
+                )
             );
             return $data_return;
         }
@@ -57,9 +68,12 @@ class Auth_model extends CI_Model {
         {
             //return false;
             $data_return = array(
-                'code' => 401,
-                'msg' => 'Unauthorized',
-                'value' => 'session not found'
+                'code' => 401.4,
+                'msg' => 'Authorization failed by filter',
+                'value' => array(
+                    'session_id' => $auth_id,
+                    'error_msg' => (($query->num_rows() == 0) ? 'Filter not found':'Duplicated selected') . '('. $query->num_rows() .')'
+                )
             );
             return $data_return;
         }
@@ -68,151 +82,11 @@ class Auth_model extends CI_Model {
         
         $data_return = array(
             'code' => 200,
-            'msg' => 'successful',
-            'value' => array(
-                'auth_id' => $auth_id,
-                'user_info' => $user_info
-            )
+            'msg' => 'OK. The client request has succeeded',
+            'value' => $user_info,
         );
         
         return $data_return;
-    }
-
-    public function login($username, $password)
-    {
-        $this->load->database('authDB');
-        if (!isset($username) || $username == "" || !isset($password) || $password =="")
-        {
-            $data_return = array(
-                'code' => 401,
-                'msg' => 'Unauthorized',
-                'value' => array(
-                    'username' => $username,
-                    'password' => 'not show',
-                    'error_msg' => 'require username and password'
-                )
-            );
-            
-            return $data_return;
-        }
-        
-        $sql = "SELECT *
-        FROM
-        auth_users
-        WHERE
-        username = '" . $username ."'
-        AND flag in(0, 1)";
-        
-        $query = $this->db->query($sql);
-        
-        if (!$query) {
-            $data_return = array(
-                'code' => 401,
-                'msg' => 'Unauthorized',
-                'value' => array(
-                    'username' => $username,
-                    'passoerd' => 'not show',
-                    'error_msg' => $this->db->_error_message()
-                )
-            );
-            return $data_return;
-        }
-        
-        if ($query->num_rows() != 1)
-        {
-            //return false;
-            $data_return = array(
-                'code' => 401,
-                'msg' => 'Unauthorized',
-                'value' => array(
-                    'username' => $username,
-                    'password' => 'not show',
-                    'error_msg' => 'user not found'
-                )
-            );
-            return $data_return;
-        }
-        
-        $password = md5($password);
-        $sql = "SELECT *
-        FROM
-        auth_users
-        WHERE
-        username = '" . $username ."'
-        AND password = '". $password ."'
-        AND flag in(0, 1)";
-        
-        $query = $this->db->query($sql);
-        
-        if (!$query) {
-            $data_return = array(
-                'code' => 401,
-                'msg' => 'Unauthorized',
-                'value' => array(
-                    'username' => $username,
-                    'passowrd' => 'not show',
-                    'error_msg' => $this->db->_error_message()
-                )
-            );
-            return $data_return;
-        }
-        
-        if ($query->num_rows() != 1)
-        {
-            //return false;
-            $data_return = array(
-                'code' => 401,
-                'msg' => 'Unauthorized',
-                'value' => array(
-                    'username' => $username,
-                    'password' => 'not show',
-                    'error_msg' => 'invalid username or password'
-                )
-            );
-            return $data_return;
-        }
-        
-        $user_info = $query->row();
-
-        //INSERT INTO `db_auth`.`auth_sessions` (`auth_id`, `user_id`, `ip_address`, `last_activity`, `user_data`) VALUES (NULL, '1', '127.0.0.1', NOW(), 'Testing');
-        $post_data = array(
-            'user_id' => $user_info->uid,
-            'ip_address' => $this->input->ip_address(),
-            'last_activity' => date("Y-m-d H:i:s"),
-            'user_data' => ''
-        );
-        
-        if (!$this->db->insert('auth_sessions', $post_data))
-        {
-            //return false;
-            $data_return = array(                
-                'code' => 401,
-                'msg' => 'Unauthorized',
-                'value' => array(
-                    'username' => $username,
-                    'password' => 'not show',
-                    'error_msg' => $this->db->_error_message()
-                )
-            );
-            return $data_return;
-        }
-        $auth_id = $this->db->insert_id();
-        $session_data = array('auth_id' => $auth_id);
-        $this->session->set_userdata('authSession', $session_data);
-        
-        $session_auth = $this->session->userdata('authSession');
-        $auth_id = $session_auth['auth_id'];
-        
-        $user_info = $this->check_login();
-        
-        return $user_info;
-    }
-    
-    function logout($class = 'welcome') {
-        $this->session->unset_userdata('sessionID');
-        $this->session->sess_destroy();
-        redirect(base_url($class));
-
     }
 }
 /*

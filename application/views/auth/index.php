@@ -1,14 +1,29 @@
-<h2><?php echo $title ?></h2>
-<hr>
-<?php if ($user_info) : ?>
-<a href="<?php echo base_url('welcome/logout'); ?>">logout</a>
-<?php else : ?>
-<a href="<?php echo base_url('welcome/login'); ?>">login</a>
-<hr>
-<?php endif; ?>
-
-
-<hr>
 <?php
-print_r($user_info);
+if ($session_info['code'] != 200) {
+    $title = $session_info['code'] . " - " . $session_info['msg'];
+}
 ?>
+
+<h2><?php echo $title ?></h2>
+<div id="account-info">
+    <?php
+    if ($session_info['code'] != 200) {
+        ?>
+        <a href="signup">Sign Up</a> | <a href="login">Login</a>
+        <?php
+    } else {
+        ?>
+        <a href="account">My</a> | <a href="logout">Logout</a>
+        <?php
+    }
+    ?>
+</div>
+
+    <?php
+    if ($session_info['code'] == 200) {
+
+        print_r($session_info);
+    } else {
+        print_r($session_info['value']);
+    }
+    ?>

@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Welcome extends CI_Controller {
+class Login extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -20,48 +20,21 @@ class Welcome extends CI_Controller {
 	public function __construct()
     {
         parent::__construct();
-		//$this->load->library('session');
-		//$this->load->helper('url');
         $this->load->library('auth');
     }
 	public function index()
-	{		
+	{
+		$this->login();
+	}
+	
+	public function login()
+	{
 		$user_info = $this->auth->check_login();
-		if (!$user_info) {
-			$data = array(
-				'title' => "Test",
-				'user_info' => '',
-				'message' => ''
-			);
-			$this->auth->login_form($data);
-			return false;
-		}
-		
-		if(!$this->auth->check_permission($user_info->user_id, "Admin List"))
+		if ($this->input->post())
 		{
-			$data = array(
-				'title' => "Test",
-				'user_info' => $user_info,
-				'message' => "Access Denied (" .$user_info->user_id .")"
-			);
-			
-			$this->auth->error_message($data);
-
+			$this->auth->login();
 			return false;
 		}
-		
-		$data = array(
-			'title' => "Test",
-			'user_info' => $user_info,
-			'message' => ""
-		);
-		
-		$this->load->view('common/header', $data);
-
-        $this->load->view('common/footer');
-		
-		
-		
 	}
 }
 
