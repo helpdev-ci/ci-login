@@ -25,7 +25,7 @@ class Welcome extends CI_Controller {
         $this->load->library('auth');
     }
 	public function index()
-	{
+	{		
 		$user_info = $this->auth->check_login();
 		if (!$user_info) {
 			$data = array(
@@ -40,7 +40,7 @@ class Welcome extends CI_Controller {
 		
 		$is_admin = $this->auth->check_permission($user_info->user_id, "AdministratorAccess");
 		
-		if(!$this->auth->check_permission($user_info->user_id, "Admin List"))
+		if(!$this->auth->check_permission($user_info->user_id, "AdministratorAccess"))
 		{
 			$data = array(
 				'title' => "Test",
