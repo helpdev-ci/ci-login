@@ -109,10 +109,11 @@ if ( ! function_exists('create_captcha'))
 
 	   if ($word == '')
 	   {
-			$pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			//$pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	   		$pool = '0123456789abcdefghijklmnopqrstuvwxyz';
 
 			$str = '';
-			for ($i = 0; $i < 8; $i++)
+			for ($i = 0; $i < 5; $i++)
 			{
 				$str .= substr($pool, mt_rand(0, strlen($pool) -1), 1);
 			}
@@ -163,11 +164,11 @@ if ( ! function_exists('create_captcha'))
 		//  Create the spiral pattern
 		// -----------------------------------
 
-		$theta		= 1;
-		$thetac		= 7;
-		$radius		= 16;
-		$circles	= 20;
-		$points		= 32;
+		$theta		= 1; // 1
+		$thetac		= 1; // 7
+		$radius		= 1; // 16
+		$circles		= 1; // 20
+		$points		= 1; // 32
 
 		for ($i = 0; $i < ($circles * $points) - 1; $i++)
 		{

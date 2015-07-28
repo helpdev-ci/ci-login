@@ -1,9 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class HPG_Auth {
+class Auth_library {
 	public function __construct()
     {
         $CI =& get_instance();
+		$CI->load->helper('auth');
 		$CI->load->helper('url');
 		$CI->load->helper('form');
 		$CI->load->library('session');
